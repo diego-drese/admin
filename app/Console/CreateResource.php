@@ -5,7 +5,7 @@ use Illuminate\Console\Command;
 
 
 class CreateResource extends Command {
-    public $signature    = 'Eard:CR';
+    public $signature    = 'Aerd:CR';
     protected $description = 'Core create resource, create the files needed for a task';
     public function __construct() {
         parent::__construct();
@@ -16,7 +16,7 @@ class CreateResource extends Command {
         $table = $this->ask('What is your table name?');
         $route = strtolower($this->ask('What is your route name?'));
 
-        $path = str_replace('boilerplate-admin/src/Commands', 'boilerplate-admin/src', __DIR__);
+        $path = str_replace('Console"', 'Stubs', __DIR__);
         $pathModel = $path.'/Models/'.$model.'.php';
         $pathController = $path.'/Http/Controllers/'.$model.'Controller.php';
         $pathRequest = $path.'/Http/Requests/'.$model.'Request.php';

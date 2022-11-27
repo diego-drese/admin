@@ -7,12 +7,13 @@
     "require": {
         "php": "^8.0.2",
         "guzzlehttp/guzzle": "^7.2",
+        "jenssegers/mongodb": "^3.9",
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
         "predis/predis": "~1.0",
-        "yadakhov/insert-on-duplicate-key": "^1.1",
-        "rakutentech/laravel-request-docs": "^1.30"
+        "rakutentech/laravel-request-docs": "^1.30",
+        "yadakhov/insert-on-duplicate-key": "^1.1"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
