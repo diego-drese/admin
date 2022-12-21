@@ -2,6 +2,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AccountChangeRequest;
+use App\Jobs\SendEmailJob;
+use App\Mail\RegisterOtp;
 use App\Models\User;
 use App\Http\Requests\AccountRequest;
 use App\Http\Requests\AccountRequestStore;
@@ -28,26 +30,38 @@ class AccountController extends Controller {
     public function storeSave(Request $request){
         $account = new Account();
         $account->fill($request->only($account->getFillable()))->save();
-        $userdata= [
-            'name'              => $request->get('name'),
-            'email'             => $request->get('email'),
-            'password'          => $request->get('password'),
-            'language_id'       => $request->get('language_id'),
-            'account_id'        => $account->id,
-            'is_account_root'   => 1
-        ];
-
-        $user = User::create($userdata);
-        UserAccount::attach($user, $account, Role::getDefaultRootAccount());
-        $credentials = $request->only('email', 'password');
-        if (!auth()->attempt($credentials)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+        $user   = User::checkEmailExist($request->get('email'));
+        $newUser = false;
+        if(!$user){
+            $userdata= [
+                'name'              => $request->get('name'),
+                'email'             => $request->get('email'),
+                'password'          => $request->get('password'),
+                'language_id'       => $request->get('language_id', 1),
+                'account_id'        => $account->id,
+                'is_account_root'   => 1
+            ];
+            $user = User::create($userdata);
+            $job    = new SendEmailJob(new RegisterOtp($user), $user);
+            dispatch($job->onQueue('send-email'));
+            $newUser=true;
         }
-        $token = auth()->user()->createToken('token-by-campaign');
+
+        UserAccount::attach($user, $account, Role::getDefaultRootAccount());
+        if($newUser){
+            $credentials = $request->only('email', 'password');
+            if (!auth()->attempt($credentials)) {
+                return response()->json(['error' => 'Unauthorized'], 401);
+            }
+            $token = auth()->user()->createToken('token-by-account');
+            return response()->json([
+                'access_token' => $token->plainTextToken,
+                'token_type' => 'bearer',
+                'user'=> Auth::user()
+            ]);
+        }
         return response()->json([
-            'access_token' => $token->plainTextToken,
-            'token_type' => 'bearer',
-            'user'=> Auth::user()
+            'message' => 'Conta criada com sucesso'
         ]);
     }
 
@@ -82,5 +96,17 @@ class AccountController extends Controller {
             'success' => true,
             'message' => 'success'
         ]);
+    }
+
+    public function confirm(string $token) {
+        $user = User::getByTokenOtp($token);
+        if($user){
+            if(!$user->email_check_at){
+                $user->email_check_at=date('Y-m-d H:i:s');
+                $user->save();
+            }
+            return view('confirm-account');
+        }
+        return view('confirm-account-error');
     }
 }

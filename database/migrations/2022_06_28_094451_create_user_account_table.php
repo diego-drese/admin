@@ -16,6 +16,8 @@ return new class extends Migration {
             $table->bigInteger('account_id')->unsigned();
             $table->bigInteger('role_id')->unsigned();
             $table->tinyInteger('is_admin')->index();
+            $table->tinyInteger('all_radio_station')->index()->default(0);
+            $table->json('radio_station')->nullable();
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('account_id')->references('id')->on('account')->onDelete('cascade');

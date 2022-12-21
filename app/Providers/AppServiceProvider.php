@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Console\CreateResource;
+use App\Console\ProcessRadioStation;
 use App\Console\ProcessRotesPermission;
 use Illuminate\Support\ServiceProvider;
 
@@ -15,7 +16,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->commands([CreateResource::class, ProcessRotesPermission::class]);
+        $this->commands([CreateResource::class, ProcessRotesPermission::class, ProcessRadioStation::class]);
     }
 
     /**

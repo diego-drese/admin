@@ -19,10 +19,10 @@ class AccountRequestStore extends FormRequest {
         }
 
         return [
-            'name' => 'required',
-            'email' => 'required',
-            'language_id' => 'required|numeric|min:1',
-            'country_id' => 'required|numeric|min:1',
+            'name' => 'required|string',
+            'email' => 'required|email',
+            'language_id' => 'required|numeric|min:1|max:1',
+            'country_id' => 'required|numeric|min:1|max:1',
             'password' => 'required|min:6|confirmed',
             'password_confirmation' => 'required|min:6'
         ];

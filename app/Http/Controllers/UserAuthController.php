@@ -12,7 +12,6 @@ use App\Models\Account;
 
 class UserAuthController extends Controller {
     public function show(): JsonResource {
-//        return new UserResource(Auth::user()->makeHidden(['is_root'])); ? preciso recuperar isso no admin
         return new UserResource(Auth::user());
     }
 
@@ -22,10 +21,9 @@ class UserAuthController extends Controller {
         return new UserResource($user->makeHidden(['is_root']));
     }
 
-    public function updateUserAndCompany(Request $request)
-    {
+    public function updateUserAndCompany(Request $request) {
         $user = Auth::user();
-        $company = Account::updateById($user->account_id, $request);
+        Account::updateById($user->account_id, $request);
         Cache::tags([Config::get('BoilerplateAdmin.cache_tag')])
             ->forget('App\Models\UsergetAccountsAttribute-user-'.$user->id);
         $user->update($request->all());

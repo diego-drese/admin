@@ -20,9 +20,13 @@ class RoleTableSeeder extends Seeder {
         if(!$role) {
             DB::table('role')
                 ->insert([
-                    'id'=>1,
-                    'name' => 'Admin',
-                    'description' => 'All privileges'
+                    'id'            => 1,
+                    'name'          => 'Adminstrador da conta',
+                    'user_account'  => null,
+                    'root_account'  => 1,
+                    'description'   => 'Todos os privilégios para conta',
+                    'created_at'   => date('Y-m-d H:i:s'),
+                    'updated_at'   => date('Y-m-d H:i:s'),
                 ]);
             $role       = Role::find(1);
             $account    = Account::find(1);
@@ -35,21 +39,58 @@ class RoleTableSeeder extends Seeder {
 
             DB::table('role')
                 ->insert([
-                    'id'=>2,
-                    'name' => 'Root Account',
-                    'root_account' => 1,
-                    'user_account' => null,
-                    'description' => 'All privilege to account'
+                    'id'            => 2,
+                    'name'          => 'Adminstrador',
+                    'description'   => 'Perfil para Adminstrador da plataforma',
+                    'root_account'  => null,
+                    'user_account'  => 1,
+                    'created_at'   => date('Y-m-d H:i:s'),
+                    'updated_at'   => date('Y-m-d H:i:s'),
                 ]);
 
             DB::table('role')
                 ->insert([
-                    'id'=>3,
-                    'name' => 'User Account',
-                    'root_account' => null,
-                    'user_account' => 1,
-                    'description' => 'Some privileges to account'
+                    'id'            => 3,
+                    'name'          => 'Jurídico',
+                    'description'   => 'Perfil para advogados para acesso juridico da plataforma',
+                    'root_account'  => null,
+                    'user_account'  => 1,
+                    'created_at'   => date('Y-m-d H:i:s'),
+                    'updated_at'   => date('Y-m-d H:i:s'),
                 ]);
+            DB::table('role')
+                ->insert([
+                    'id'            => 4,
+                    'name'          => 'Engenharia',
+                    'description'   => 'Perfil para Engenheiros para acesso técnico da plataforma',
+                    'root_account'  => null,
+                    'user_account'  => 1,
+                    'created_at'   => date('Y-m-d H:i:s'),
+                    'updated_at'   => date('Y-m-d H:i:s'),
+                ]);
+
+            DB::table('role')
+                ->insert([
+                    'id'            => 5,
+                    'name'          => 'Administrativo',
+                    'description'   => 'Perfil administrativo para acesso da plataforma',
+                    'root_account'  => null,
+                    'user_account'  => 1,
+                    'created_at'   => date('Y-m-d H:i:s'),
+                    'updated_at'   => date('Y-m-d H:i:s'),
+                ]);
+
+            DB::table('role')
+                ->insert([
+                    'id'            => 6,
+                    'name'          => 'Usuário',
+                    'description'   => 'Perfil com permisão de apenas leitura em todas as áreas do sistema',
+                    'root_account'  => null,
+                    'user_account'  => 1,
+                    'created_at'   => date('Y-m-d H:i:s'),
+                    'updated_at'   => date('Y-m-d H:i:s'),
+                ]);
+
         }
     }
 }

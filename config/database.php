@@ -77,7 +77,22 @@ return [
             'search_path' => 'public',
             'sslmode' => 'prefer',
         ],
-
+        'mongo' => [
+            'driver' => 'mongodb',
+            'host' => env('DB_HOST_MONGO', '127.0.0.1'),
+            'port' => env('DB_PORT_MONGO', 27017),
+            'database' => env('DB_DATABASE_MONGO', 'aerd'),
+            'username' => env('DB_USERNAME_MONGO', ''),
+            'password' => env('DB_PASSWORD_MONGO', ''),
+            'charset' => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix' => '',
+            'strict' => false,
+            'engine' => null,
+            'options' => [
+                'db' => 'admin' // sets the authentication database required by mongo 3
+            ]
+        ],
         'sqlsrv' => [
             'driver' => 'sqlsrv',
             'url' => env('DATABASE_URL'),

@@ -13,7 +13,12 @@
         "laravel/tinker": "^2.7",
         "predis/predis": "~1.0",
         "rakutentech/laravel-request-docs": "^1.30",
-        "yadakhov/insert-on-duplicate-key": "^1.1"
+        "yadakhov/insert-on-duplicate-key": "^1.1",
+        "ext-mongodb": "*",
+        "ext-zip": "*",
+        "ext-iconv": "*",
+        "ext-xmlreader": "*",
+        "ext-simplexml": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

@@ -11,14 +11,17 @@ return new class extends Migration {
      * @return void
      */
     public function up() {
-        Schema::create('role', function (Blueprint $table) {
-            $table->bigIncrements('id');
+        Schema::create('plan', function (Blueprint $table) {
+            $table->bigIncrements('id')->unsigned();
+            $table->bigInteger('account_id')->nullable();
             $table->string("name");
+            $table->decimal("value", 10,2);
+            $table->decimal("size_gb", 10,2)->default(1);
+            $table->enum("days", [30, 90, 180, 360])->default(30);
             $table->tinyInteger("status")->default(1);
-            $table->tinyInteger("root_account")->nullable()->unique();
-            $table->tinyInteger("user_account")->nullable();
             $table->text("description");
-            $table->timestamps();
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrentOnUpdate();
         });
     }
 
@@ -28,8 +31,6 @@ return new class extends Migration {
      * @return void
      */
     public function down() {
-
-        Schema::dropIfExists('role_user');
-        Schema::dropIfExists('role');
+        Schema::dropIfExists('plan');
     }
 };

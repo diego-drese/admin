@@ -22,7 +22,10 @@ trait User {
             'account_id',
             'is_account_root',
             'image',
-            'language_id'
+            'language_id',
+            'email_check_token',
+            'email_check_send_at',
+            'email_check_at'
         ];
     }
     /**
@@ -160,5 +163,8 @@ trait User {
     }
     public function setPasswordAttribute($password) {
         return $this->attributes['password'] = bcrypt($password);
+    }
+    public static function getByTokenOtp($token) {
+       return self::where('email_check_token', $token)->first();
     }
 }

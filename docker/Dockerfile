@@ -14,6 +14,7 @@ RUN apk add --no-cache \
     php8-gd \
     php8-tokenizer \
     php8-dom \
+    php8-redis \
     php8-xmlwriter \
     php8-fileinfo \
     php8-zlib \
@@ -30,6 +31,10 @@ RUN apk add --no-cache \
     php8-pdo_mysql \
     php8-pdo_pgsql \
     php8-pdo_sqlite \
+    php8-mongodb \
+    php8-zip \
+    php8-simplexml \
+    php8-xmlreader \
     php8-phar \
     php8-posix \
     php8-session \

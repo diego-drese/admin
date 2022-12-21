@@ -16,3 +16,4 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('account-confirm/{token}', 'AccountController@confirm')->name('account.confirm');
