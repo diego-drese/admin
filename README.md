@@ -1,4 +1,4 @@
-# Aerd
+# Admin
 To execute docker container, see readme file in docker folder.
 
 ## Aerd commands inside docker
@@ -23,7 +23,7 @@ php artisan migrate
 php artisan db:seed
 
 ### Run command to generated permissions from routes
-php artisan Aerd:PRP
+php artisan Admin:PRP
 
 ### To Create new resources uses
-php artisan Aerd:CR
+php artisan Admin:CR
