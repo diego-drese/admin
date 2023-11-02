@@ -14,6 +14,7 @@ return [
     */
 
     'default' => env('QUEUE_CONNECTION', 'sync'),
+    'email' => env('QUEUE_EMAIL', 'send_email'),
 
     /*
     |--------------------------------------------------------------------------

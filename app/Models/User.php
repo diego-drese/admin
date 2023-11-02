@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Config;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
@@ -42,4 +43,33 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function roles(){
+        return $this->belongsToMany(Role::class,  'user_has_roles');
+    }
+
+    static function getByEmail($email){
+        return self::where('email', $email)->first();
+    }
+
+    public function hasPermissionCached($resource){
+        $cacheName = __CLASS__ . __FUNCTION__ . '-user-'.$this->id;
+        $resources =  Cache::tags([Config::get('app.cache_tag')])->remember($cacheName, Config::get('cache_ttl_86400'), function ()  {
+            $this->load('roles');
+            $roles= $this->roles->pluck('id')->toArray();
+            return RoleHasResource::select('resources.*')
+                ->distinct()
+                ->join('resources', 'resources.id', 'role_has_resources.resource_id')
+                ->whereIn('role_id', $roles)
+                ->get();
+
+        });
+
+        foreach ($resources as $resourceDb){
+            if($resource->id == $resourceDb->id){
+                return [$resourceDb];
+            }
+        }
+        return [];
+    }
 }

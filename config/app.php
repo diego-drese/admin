@@ -17,6 +17,15 @@ return [
     */
 
     'name' => env('APP_NAME', 'Laravel'),
+    'cache_tag'                 => env('CACHE_TAG', '4vas'),
+    'cache_ttl_30'              => 30,
+    'cache_ttl_60'              => 60,
+    'cache_ttl_120'             => 120,
+    'cache_ttl_300'             => 300,
+    'cache_ttl_900'             => 900,
+    'cache_ttl_1800'            => 1800,
+    'cache_ttl_7200'            => 7200,
+    'cache_ttl_86400'           => 86400,
 
     /*
     |--------------------------------------------------------------------------
@@ -56,7 +65,8 @@ return [
     */
 
     'url' => env('APP_URL', 'http://localhost'),
-
+    'url_front' => env('APP_URL_FRONT', 'http://localhost'),
+    'url_password_reset' => env('APP_URL_PASSWORD_RESET', 'http://localhost'),
     'asset_url' => env('ASSET_URL'),
 
     /*

@@ -9,15 +9,14 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
-    {
-        Schema::create('password_reset_tokens', function (Blueprint $table) {
+    public function up(): void {
+        Schema::create('user_has_roles', function (Blueprint $table) {
             $table->bigIncrements('id')->unsigned();
-            $table->string('email')->index();
-            $table->string('token');
+            $table->bigInteger('role_id')->unsigned();
+            $table->bigInteger('user_id')->unsigned();
             $table->timestamps();
-            $table->timestamp('used_at')->nullable();
-            $table->softDeletes();
+            $table->foreign('role_id')->references('id')->on('roles');
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('password_reset_tokens');
+        Schema::dropIfExists('user_has_roles');
     }
 };
