@@ -5,6 +5,8 @@ namespace App\Console;
 use App\Models\Resource;
 use App\Models\Role;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
 
 class Resources extends Command {
@@ -13,7 +15,7 @@ class Resources extends Command {
      *
      * @var string
      */
-    protected $signature = 'admin:resources {roleAttach? : Id role to attach resource}';
+    protected $signature = 'admin:resources {roleAttach?}';
 
     /**
      * The console command description.
@@ -51,7 +53,7 @@ class Resources extends Command {
                 $res = Resource::getResourcesByRouteName($routeLaravel->getName());
                 if (!$res) {
                     $res                    = new Resource;
-                    $res->name              = isset($routeLaravel->wheres['name']) ?? ucfirst(str_replace('.', ' ', $routeLaravel->getName()));;
+                    $res->name              = isset($routeLaravel->wheres['name']) ? $routeLaravel->wheres['name'] : ucfirst(str_replace('.', ' ', $routeLaravel->getName()));;
                     $res->is_menu           = isset($routeLaravel->wheres['isMenu']) && $routeLaravel->wheres['isMenu'] ? 1 : 0;
                     $res->route_name        = $routeLaravel->getName();
                     $res->controller_method = $action['controller'];
@@ -60,7 +62,7 @@ class Resources extends Command {
 
                     /** Find parent resource */
                     if (isset($routeLaravel->wheres['parent']) && $routeLaravel->wheres['parent']) {
-                        $resParent = Resource::getResourceIdByRouteName($routeLaravel->wheres['parent']);
+                        $resParent = Resource::getResourcesByRouteName($routeLaravel->wheres['parent']);
                         if ($resParent) {
                             $res->parent_id = $resParent->id;
                         }
@@ -74,6 +76,8 @@ class Resources extends Command {
                 $bar->advance();
             }
         }
+
+        Cache::tags(Config::get('app.cache_tag'))->flush();
         $bar->finish();
     }
 

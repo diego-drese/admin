@@ -13,6 +13,9 @@ class Role extends Model {
         'status',
     ];
 
+    public function users(){
+
+    }
     public function resources(){
         return $this->belongsToMany(Resource::class,  'role_has_resources');
     }

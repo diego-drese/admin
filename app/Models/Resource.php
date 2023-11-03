@@ -8,6 +8,12 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 
 class Resource extends Model {
+    protected $fillable = [
+        'name',
+        'is_menu',
+        'parent_id',
+        'order',
+    ];
     public static function verifyUser($controllerAction){
         $user 			= Auth::user();
         $controller 	= $controllerAction;
@@ -28,10 +34,19 @@ class Resource extends Model {
             return self::where('controller_method', $ControllerMethod)->first();
         });
     }
+
+
     public static function getResourcesByRouteName($routeName)  {
         $cacheName = __CLASS__ . __FUNCTION__ . '-route-name-' . $routeName;
         return  Cache::tags([Config::get('app.cache_tag')])->remember($cacheName, Config::get('cache_ttl_86400'), function () use ($routeName) {
             return self::where('route_name', $routeName)->first();
+        });
+    }
+
+    public static function getResourceIdByRouteName($routeName)  {
+        $cacheName = __CLASS__ . __FUNCTION__ . '-route-name-' . $routeName;
+        return  Cache::tags([Config::get('app.cache_tag')])->remember($cacheName, Config::get('cache_ttl_86400'), function () use ($routeName) {
+            return self::where('name', $routeName)->first();
         });
     }
 }

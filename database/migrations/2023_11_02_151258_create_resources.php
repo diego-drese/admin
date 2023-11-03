@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->string('name');
             $table->boolean('is_menu')->index();
             $table->string('route_name')->nullable();
-            $table->string('controller_method');
+            $table->string('controller_method')->nullable();
             $table->boolean('can_be_default')->default(0);
             $table->bigInteger('parent_id')->index()->default(0);
             $table->integer('order');

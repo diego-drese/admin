@@ -1,7 +1,10 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\RolesController;
+use App\Http\Controllers\ResourcesController;
 use Illuminate\Support\Facades\Route;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -26,7 +29,18 @@ Route::group(['prefix' => 'auth'], function () {
     });
 
     Route::group(['middleware' => ['auth:sanctum', 'admin.acl']], function () {
-        Route::get('root', [AuthController::class, 'root'])->name('auth.root')->where(['name'=>'Root', 'isMenu'=>0, 'default'=>0, 'parent'=>0]);
-        Route::get('user', [AuthController::class, 'user'])->name('auth.user')->where(['name'=>'user', 'isMenu'=>1, 'default'=>1, 'parent'=>0]);
+        /** Roles */
+        Route::get('roles', [RolesController::class, 'index'])->name('auth.roles.index')->where(['name'=>'Roles', 'isMenu'=>1, 'default'=>1, 'parent'=>0]);
+        Route::post('roles', [RolesController::class, 'store'])->name('auth.roles.store')->where(['name'=>'Roles Store', 'isMenu'=>0, 'default'=>0, 'parent'=>'auth.roles.index']);
+        Route::get('roles/{id}', [RolesController::class, 'show'])->name('auth.roles.show')->where(['name'=>'Roles Show', 'isMenu'=>0, 'default'=>0, 'parent'=>'auth.roles.index']);
+        Route::put('roles/{id}', [RolesController::class, 'update'])->name('auth.roles.update')->where(['name'=>'Roles Update', 'isMenu'=>0, 'default'=>0, 'parent'=>'auth.roles.index']);
+        Route::delete('roles/{id}', [RolesController::class, 'destroy'])->name('auth.roles.destroy')->where(['name'=>'Roles Destroy', 'isMenu'=>0, 'default'=>0, 'parent'=>'auth.roles.index']);
+
+        /** Roles */
+        Route::get('resources', [ResourcesController::class, 'index'])->name('auth.resources.index')->where(['name'=>'Resources', 'isMenu'=>1, 'default'=>1, 'parent'=>0]);
+        Route::post('resources', [ResourcesController::class, 'store'])->name('auth.resources.store')->where(['name'=>'Resources Store', 'isMenu'=>0, 'default'=>0, 'parent'=>'auth.resources.index']);
+        Route::get('resources/{id}', [ResourcesController::class, 'show'])->name('auth.resources.show')->where(['name'=>'Resources Show', 'isMenu'=>0, 'default'=>0, 'parent'=>'auth.resources.index']);
+        Route::put('resources/{id}', [ResourcesController::class, 'update'])->name('auth.resources.update')->where(['name'=>'Resources Update', 'isMenu'=>0, 'default'=>0, 'parent'=>'auth.resources.index']);
+        Route::delete('resources/{id}', [ResourcesController::class, 'destroy'])->name('auth.resources.destroy')->where(['name'=>'Resources Destroy', 'isMenu'=>0, 'default'=>0, 'parent'=>'auth.resources.index']);
     });
 });
