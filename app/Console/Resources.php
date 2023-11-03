@@ -53,23 +53,22 @@ class Resources extends Command {
                 $res = Resource::getResourcesByRouteName($routeLaravel->getName());
                 if (!$res) {
                     $res                    = new Resource;
-                    $res->name              = isset($routeLaravel->wheres['name']) ? $routeLaravel->wheres['name'] : ucfirst(str_replace('.', ' ', $routeLaravel->getName()));;
-                    $res->is_menu           = isset($routeLaravel->wheres['isMenu']) && $routeLaravel->wheres['isMenu'] ? 1 : 0;
-                    $res->route_name        = $routeLaravel->getName();
-                    $res->controller_method = $action['controller'];
-                    $res->can_be_default    = isset($routeLaravel->wheres['default']) && $routeLaravel->wheres['default'] ? 1 : 0;
-                    $res->order             = 0;
-
-                    /** Find parent resource */
-                    if (isset($routeLaravel->wheres['parent']) && $routeLaravel->wheres['parent']) {
-                        $resParent = Resource::getResourcesByRouteName($routeLaravel->wheres['parent']);
-                        if ($resParent) {
-                            $res->parent_id = $resParent->id;
-                        }
-                    }
-                    $res->save();
                 }
+                $res->name              = isset($routeLaravel->wheres['name']) ? $routeLaravel->wheres['name'] : ucfirst(str_replace('.', ' ', $routeLaravel->getName()));;
+                $res->is_menu           = isset($routeLaravel->wheres['isMenu']) && $routeLaravel->wheres['isMenu'] ? 1 : 0;
+                $res->route_name        = $routeLaravel->getName();
+                $res->controller_method = $action['controller'];
+                $res->can_be_default    = isset($routeLaravel->wheres['default']) && $routeLaravel->wheres['default'] ? 1 : 0;
+                $res->order             = 0;
+                $res->save();
 
+                /** Find parent resource */
+                if (isset($routeLaravel->wheres['parent']) && $routeLaravel->wheres['parent']) {
+                    $resParent = Resource::getResourcesByRouteName($routeLaravel->wheres['parent']);
+                    if ($resParent) {
+                        $res->parent_id = $resParent->id;
+                    }
+                }
                 if($role){
                     $role->resources()->attach($res);
                 }

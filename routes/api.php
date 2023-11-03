@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RolesController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\ResourcesController;
 use Illuminate\Support\Facades\Route;
 
@@ -42,5 +43,12 @@ Route::group(['prefix' => 'auth'], function () {
         Route::get('resources/{id}', [ResourcesController::class, 'show'])->name('auth.resources.show')->where(['name'=>'Resources Show', 'isMenu'=>0, 'default'=>0, 'parent'=>'auth.resources.index']);
         Route::put('resources/{id}', [ResourcesController::class, 'update'])->name('auth.resources.update')->where(['name'=>'Resources Update', 'isMenu'=>0, 'default'=>0, 'parent'=>'auth.resources.index']);
         Route::delete('resources/{id}', [ResourcesController::class, 'destroy'])->name('auth.resources.destroy')->where(['name'=>'Resources Destroy', 'isMenu'=>0, 'default'=>0, 'parent'=>'auth.resources.index']);
+
+        /** Roles */
+        Route::get('users', [UserController::class, 'index'])->name('auth.users.index')->where(['name'=>'Users', 'isMenu'=>1, 'default'=>1, 'parent'=>0]);
+        Route::post('users', [UserController::class, 'store'])->name('auth.users.store')->where(['name'=>'Users Store', 'isMenu'=>0, 'default'=>0, 'parent'=>'auth.users.index']);
+        Route::get('users/{id}', [UserController::class, 'show'])->name('auth.users.show')->where(['name'=>'Users Show', 'isMenu'=>0, 'default'=>0, 'parent'=>'auth.users.index']);
+        Route::put('users/{id}', [UserController::class, 'update'])->name('auth.users.update')->where(['name'=>'Users Update', 'isMenu'=>0, 'default'=>0, 'parent'=>'auth.users.index']);
+        Route::delete('users/{id}', [UserController::class, 'destroy'])->name('auth.users.destroy')->where(['name'=>'Users Destroy', 'isMenu'=>0, 'default'=>0, 'parent'=>'auth.users.index']);
     });
 });
