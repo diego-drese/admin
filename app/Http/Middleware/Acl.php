@@ -12,18 +12,16 @@ class Acl {
      *
      * @param \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next, $ability = null, $boundModelName = null) {
-        $routeArray         = app('request')->route()->getAction();
-        $controllerAction   = $routeArray['controller'];
-        $controller         = explode('@', $controllerAction);
-        $request->headers->set('controller' , $controller);
-        $resources          = Resource::verifyUser($controllerAction);
+    public function handle(Request $request, Closure $next) {
+        $routeArray     = app('request')->route()->getAction();
+        $routeName      = $routeArray['as'];
+        $resource      = Resource::checkUser($routeName);
 
-        if($resources === false){
+        if($resource === false){
             return response()->json(['message'=>'Resource not found'],404);
         }
 
-        if(!count($resources)){
+        if(!isset($resource->id)){
             return response()->json(['message'=>'Access denied'],403);
         }
 

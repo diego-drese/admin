@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -11,7 +12,7 @@ class UserSeeder extends Seeder {
      */
     public function run(): void {
         if (!User::first()) {
-            User::insert([
+            User::create([
                 'id' => 1,
                 'name' => 'root',
                 'is_root' => 1,
@@ -20,7 +21,7 @@ class UserSeeder extends Seeder {
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
             ]);
-            User::insert([
+           $admin = User::create([
                 'id' => 2,
                 'name' => 'admin',
                 'email' => 'admin@admin.com',
@@ -28,6 +29,9 @@ class UserSeeder extends Seeder {
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
             ]);
+
+
+           $admin->roles()->attach(Role::ROLE_ID_ADMIN);
         }
 
     }

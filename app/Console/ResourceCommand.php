@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
 
-class Resources extends Command {
+class ResourceCommand extends Command {
     /**
      * The name and signature of the console command.
      *
@@ -22,7 +22,7 @@ class Resources extends Command {
      *
      * @var string
      */
-    protected $description = 'Refresh Routes by Resources';
+    protected $description = 'Refresh Routes by ResourcesCommand';
 
     /**
      * Create a new command instance.
@@ -52,14 +52,14 @@ class Resources extends Command {
             if (array_key_exists('controller', $action) && !is_null($middleware) && in_array('admin.acl', $middleware)) {
                 $res = Resource::getResourcesByRouteName($routeLaravel->getName());
                 if (!$res) {
-                    $res                    = new Resource;
+                    $res                = new Resource;
                 }
-                $res->name              = isset($routeLaravel->wheres['name']) ? $routeLaravel->wheres['name'] : ucfirst(str_replace('.', ' ', $routeLaravel->getName()));;
-                $res->is_menu           = isset($routeLaravel->wheres['isMenu']) && $routeLaravel->wheres['isMenu'] ? 1 : 0;
-                $res->route_name        = $routeLaravel->getName();
-                $res->controller_method = $action['controller'];
-                $res->can_be_default    = isset($routeLaravel->wheres['default']) && $routeLaravel->wheres['default'] ? 1 : 0;
-                $res->order             = 0;
+                $res->type              = Resource::TYPE_ROUTE;
+                $res->name              = ucfirst(str_replace('.', ' ', $routeLaravel->getName()));
+                $res->description       = isset($routeLaravel->wheres['description']) ? $routeLaravel->wheres['description'] : '';
+                $res->route             = $routeLaravel->getName();
+                $res->controller        = $action['controller'];
+                $res->order             = isset($routeLaravel->wheres['order']) ? $routeLaravel->wheres['order'] : 0;
                 $res->save();
 
                 /** Find parent resource */

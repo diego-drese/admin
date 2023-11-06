@@ -8,45 +8,42 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 
 class Resource extends Model {
+    const TYPE_ROUTE='route';
+    const TYPE_CONTROL='control';
+
     protected $fillable = [
+        'type',
         'name',
-        'is_menu',
+        'description',
         'parent_id',
         'order',
     ];
-    public static function verifyUser($controllerAction){
+
+    public static function checkUser($routeName){
         $user 			= Auth::user();
-        $controller 	= $controllerAction;
-        $resource       = self::getResourcesByControllerMethod($controller);
+        $resource       = self::getResourcesByRouteName($routeName);
         if($resource == null){
             return false;
         }
-        if($user->is_root){
+        if($user->is_root==User::IS_ROOT){
             return $resource;
         }
         return $user->hasPermissionCached($resource);
-
     }
 
-    public static function getResourcesByControllerMethod($ControllerMethod)  {
-        $cacheName = __CLASS__ . __FUNCTION__ . '-controller-method-' . $ControllerMethod;
-        return  Cache::tags([Config::get('app.cache_tag')])->remember($cacheName, Config::get('cache_ttl_86400'), function () use ($ControllerMethod) {
-            return self::where('controller_method', $ControllerMethod)->first();
+    public static function getResourcesByControllerMethod($Controller)  {
+        $cacheName = __CLASS__ . __FUNCTION__ . '-controller-' . $Controller;
+        return  Cache::tags([Config::get('app.cache_tag')])->remember($cacheName, Config::get('cache_ttl_86400'), function () use ($Controller) {
+            return self::where('controller', $Controller)->first();
+        });
+    }
+
+    public static function getResourcesByRouteName($route)  {
+        $cacheName = __CLASS__ . __FUNCTION__ . '-route-' . $route;
+        return  Cache::tags([Config::get('app.cache_tag')])->remember($cacheName, Config::get('cache_ttl_86400'), function () use ($route) {
+            return self::where('route', $route)->first();
         });
     }
 
 
-    public static function getResourcesByRouteName($routeName)  {
-        $cacheName = __CLASS__ . __FUNCTION__ . '-route-name-' . $routeName;
-        return  Cache::tags([Config::get('app.cache_tag')])->remember($cacheName, Config::get('cache_ttl_86400'), function () use ($routeName) {
-            return self::where('route_name', $routeName)->first();
-        });
-    }
-
-    public static function getResourceIdByRouteName($routeName)  {
-        $cacheName = __CLASS__ . __FUNCTION__ . '-route-name-' . $routeName;
-        return  Cache::tags([Config::get('app.cache_tag')])->remember($cacheName, Config::get('cache_ttl_86400'), function () use ($routeName) {
-            return self::where('name', $routeName)->first();
-        });
-    }
 }

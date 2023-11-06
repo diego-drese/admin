@@ -5,99 +5,44 @@ namespace App\Http\Controllers;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\ResetPasswordRequest;
-use App\Jobs\SendEmailJob;
-use App\Mail\PasswordReset;
-use App\Models\PasswordResetToken;
-use Illuminate\Http\JsonResponse;
+use App\Http\Requests\UpdateMeRequest;
+use App\Http\Resources\Resource;
+use App\Repositories\UserRepository;
 use Illuminate\Http\Request;
-use App\Models\User;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Hash;
 
 
 class AuthController extends Controller {
-    public function register(RegisterRequest $request): JsonResponse {
-        $user = new User([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => bcrypt($request->password)
-        ]);
+    private $userRepository;
 
-        if ($user->save()) {
-            return response()->json([
-                'message' => 'Successfully created user!'
-            ], 201);
-        } else {
-            return response()->json(['error' => 'Provide proper details']);
-        }
+    public function __construct(UserRepository $userRepository) {
+        $this->userRepository = $userRepository;
     }
 
-    public function login(LoginRequest $request): JsonResponse {
-        $credentials = request(['email', 'password']);
-        if (!Auth::attempt($credentials)) {
-            return response()->json([
-                'message' => 'Unauthorized'
-            ], 401);
-        }
-        $user = $request->user();
-        $tokenResult = $user->createToken('Personal Access Token');
-        $token = $tokenResult->plainTextToken;
-        return response()->json([
-            'access_token' => $token,
-            'token_type' => 'Bearer',
-        ]);
+    public function register(RegisterRequest $request): Resource {
+        return new Resource($this->userRepository->register($request->all()));
     }
 
-
-    public function logout(Request $request): JsonResponse {
-        $request->user()->tokens()->delete();
-        return response()->json(['message' => 'Successfully logged out']);
+    public function login(LoginRequest $request): Resource {
+        return new Resource($this->userRepository->login($request));
     }
 
-    public function me(Request $request): JsonResponse {
-        return response()->json($request->user());
+    public function logout(Request $request): Resource {
+        return new Resource($this->userRepository->logout($request));
     }
 
-    public function root(Request $request): JsonResponse {
-        return response()->json(['me'=>$request->user(),'root'=>true]);
-    }
-    public function user(Request $request): JsonResponse {
-        return response()->json(['me'=>$request->user(),'root'=>false, 'user'=>true]);
+    public function me(Request $request): Resource {
+        return new Resource($request->user());
     }
 
-    public function resetPassword(ResetPasswordRequest $request): JsonResponse {
-        $user = User::getByEmail($request->get('email'));
-        if ($user) {
-            $token = PasswordResetToken::create([
-                'email' => $user->email,
-                'token' => md5(uniqid()),
-                'created_at' => date('Y-m-d H:i:s'),
-            ]);
-            $job = new SendEmailJob(new PasswordReset($token), $user->email);
-            dispatch($job->onQueue(Config::get('queue.email')));
-        }
-        return response()->json([
-            'message' => 'Email sent successfully, follow the instructions in your email box.'
-        ]);
+    public function updateMe(UpdateMeRequest $request): Resource {
+        return new Resource($this->userRepository->updateMe($request));
     }
 
-    public function newPassword(ResetPasswordRequest $request): JsonResponse {
-        $token = PasswordResetToken::getByToken($request->get('token'));
-        if (!$token) {
-            return response()->json([
-                'message' => 'Token invalid'
-            ]);
-        }
-        $user = User::getByEmail($token->email);
-        $user->password = Hash::make($request->get('password'));
-        $user->save();
+    public function resetPassword(ResetPasswordRequest $request): Resource {
+        return new Resource($this->userRepository->resetPassword($request));
+    }
 
-        $token->used_at = date('Y-m-d H:i:s');
-        $token->deleted_at = date('Y-m-d H:i:s');
-        $token->save();
-        return response()->json([
-            'message' => 'Password changed successfully'
-        ]);
+    public function newPassword(ResetPasswordRequest $request): Resource {
+        return new Resource($this->userRepository->newPassword($request));
     }
 }

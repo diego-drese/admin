@@ -13,6 +13,7 @@ class User extends Authenticatable
 {
     use HasApiTokens, SoftDeletes, Notifiable;
 
+    const IS_ROOT=1;
     /**
      * The attributes that are mass assignable.
      *
@@ -64,12 +65,11 @@ class User extends Authenticatable
                 ->get();
 
         });
-
         foreach ($resources as $resourceDb){
             if($resource->id == $resourceDb->id){
-                return [$resourceDb];
+                return $resourceDb;
             }
         }
-        return [];
+        return null;
     }
 }

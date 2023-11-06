@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use App\Models\Resource;
-use App\Models\Role;
 use App\Repositories\ResourceRepository;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -24,10 +23,11 @@ class ResourceRequest extends FormRequest {
     public function rules(): array {
         return [
             'name' => 'required|string',
-            'is_menu' => 'required|min:0|max:1',
+            'description' => 'required|string',
             'parent_id'=> 'nullable|integer',
             'order'=> 'nullable|integer',
         ];
+
     }
 
     public function withValidator($validator) {

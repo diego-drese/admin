@@ -115,6 +115,10 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/sebastian/comparator" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/sebastian/object-enumerator" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/theseer/tokenizer" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/rakutentech/laravel-request-docs" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/kitloong/laravel-app-logger" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/spatie/laravel-http-logger" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/spatie/laravel-package-tools" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

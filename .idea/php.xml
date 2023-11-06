@@ -110,6 +110,10 @@
       <path value="$PROJECT_DIR$/vendor/sebastian/comparator" />
       <path value="$PROJECT_DIR$/vendor/sebastian/object-enumerator" />
       <path value="$PROJECT_DIR$/vendor/theseer/tokenizer" />
+      <path value="$PROJECT_DIR$/vendor/rakutentech/laravel-request-docs" />
+      <path value="$PROJECT_DIR$/vendor/kitloong/laravel-app-logger" />
+      <path value="$PROJECT_DIR$/vendor/spatie/laravel-http-logger" />
+      <path value="$PROJECT_DIR$/vendor/spatie/laravel-package-tools" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.0" />

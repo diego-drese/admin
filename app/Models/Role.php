@@ -8,6 +8,9 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 
 class Role extends Model {
+    const ROLE_ID_ADMIN=1;
+    const ROLE_ID_USER=2;
+
     protected $fillable = [
         'name',
         'status',

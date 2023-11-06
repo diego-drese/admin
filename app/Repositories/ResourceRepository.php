@@ -18,15 +18,15 @@ class ResourceRepository implements RepositoryInterface {
     }
 
     public function paginate(Request $request) {
-        return $this->model->orderBy('order', 'ASC')->orderBy('name', 'ASC')->paginate($request->get('limit', 10));
+        return $this->model->orderBy('order', 'ASC')->orderBy('order', 'ASC')->paginate($request->get('limit', 10));
     }
 
     public function add(array $data) {
-        return $this->model->create(['name' => $data['name'], 'is_menu' => $data['is_menu'], 'parent_id' => $data['parent_id'], 'order' => $data['order']]);
+        return $this->model->create(['type' => Resource::TYPE_CONTROL, 'name' => $data['name'], 'description' => $data['description'], 'parent_id' => $data['parent_id'], 'order' => $data['order']]);
     }
 
     public function update(array $data, $id) {
-        $this->model->where('id', $id)->update(['name' => $data['name'], 'is_menu' => $data['is_menu'], 'parent_id' => $data['parent_id'], 'order' => $data['order']]);
+        $this->model->where('id', $id)->update(['name' => $data['name'], 'description' => $data['description'], 'parent_id' => $data['parent_id'], 'order' => $data['order']]);
         return $this->find($id);
     }
 
